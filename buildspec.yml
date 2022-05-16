@@ -1,0 +1,31 @@
+version: 0.2
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR…
+      - aws --version
+      - aws ecr get-login-password --region us-east-1 
+      - echo ciginiti@123 | docker login --username pavansairam52 --password-stdin
+      #- 452444392358.dkr.ecr.us-east-1.amazonaws.com
+      - REPOSITORY_URI=452444392358.dkr.ecr.us-east-1.amazonaws.com/foodappimages
+      #- COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1–7)
+      - IMAGE_TAG=dev-$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image…
+      - docker build -t foodappimages -f Dockerfile .
+      #- docker tag $REPOSITORY_URI
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images…
+      #- docker push $REPOSITORY_URI:latest
+      - docker images 
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 452444392358.dkr.ecr.us-east-1.amazonaws.com
+      - docker tag foodappimages $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:latest
+      - echo Writing image definitions file…
+      - printf '[{"name":"foodapp-be-container","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+artifacts:
+    files: imagedefinitions.json
