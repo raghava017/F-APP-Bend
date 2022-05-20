@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-@CrossOrigin(origins = "https://20.235.64.55:3000")
+@CrossOrigin(origins = "http://20.219.35.173:3000")
 @RestController
 
 @RequestMapping("/users")
