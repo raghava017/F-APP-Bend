@@ -6,7 +6,7 @@ import com.cigniti.foodApp.service.GenieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "https://20.235.64.55:3000")
+@CrossOrigin(origins = "http://20.219.35.173:3000")
 @RestController
 
 @RequestMapping("/genie")
